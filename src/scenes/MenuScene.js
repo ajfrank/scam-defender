@@ -16,7 +16,7 @@ export class MenuScene extends Phaser.Scene {
         const cx = CONFIG.WIDTH / 2;
 
         // Title
-        this.add.text(cx, 100, 'SCAM DEFENDER', {
+        this.add.text(cx, 120, 'SCAM DEFENDER', {
             fontSize: '48px',
             fontFamily: 'monospace',
             color: CONFIG.COLORS.TITLE_TEXT,
@@ -24,14 +24,14 @@ export class MenuScene extends Phaser.Scene {
         }).setOrigin(0.5);
 
         // Subtitle
-        this.add.text(cx, 155, "Protect Meta's users from scams!", {
+        this.add.text(cx, 180, "Protect Meta's users from scams!", {
             fontSize: '14px',
             fontFamily: 'monospace',
             color: '#aaaaaa',
         }).setOrigin(0.5);
 
         // Threat legend
-        const legendY = 200;
+        const legendY = 235;
         const threats = [
             { name: 'Phishing', color: '#ff4444', symbol: '@' },
             { name: 'Pig Butchering', color: '#ff8800', symbol: '$' },
@@ -46,7 +46,7 @@ export class MenuScene extends Phaser.Scene {
         }).setOrigin(0.5);
 
         threats.forEach((t, i) => {
-            this.add.text(cx - 80, legendY + 25 + i * 20, `${t.symbol}  ${t.name}`, {
+            this.add.text(cx - 80, legendY + 30 + i * 24, `${t.symbol}  ${t.name}`, {
                 fontSize: '14px',
                 fontFamily: 'monospace',
                 color: t.color,
@@ -55,7 +55,7 @@ export class MenuScene extends Phaser.Scene {
 
         // Controls — detect mobile vs desktop
         const isMobile = !this.sys.game.device.os.desktop;
-        const ctrlY = 330;
+        const ctrlY = 390;
         this.add.text(cx, ctrlY, '--- CONTROLS ---', {
             fontSize: '12px',
             fontFamily: 'monospace',
@@ -73,7 +73,7 @@ export class MenuScene extends Phaser.Scene {
                 'P / Esc - Pause',
             ];
         controls.forEach((c, i) => {
-            this.add.text(cx, ctrlY + 25 + i * 20, c, {
+            this.add.text(cx, ctrlY + 30 + i * 24, c, {
                 fontSize: '13px',
                 fontFamily: 'monospace',
                 color: '#888888',
@@ -81,7 +81,7 @@ export class MenuScene extends Phaser.Scene {
         });
 
         // Tagline
-        const taglineY = ctrlY + 25 + controls.length * 20 + 15;
+        const taglineY = ctrlY + 30 + controls.length * 24 + 25;
         this.add.text(cx, taglineY, 'Destroy scams before they reach your users!', {
             fontSize: '16px',
             fontFamily: 'monospace',
@@ -90,7 +90,7 @@ export class MenuScene extends Phaser.Scene {
         }).setOrigin(0.5);
 
         // Start button
-        const startBtnY = taglineY + 40;
+        const startBtnY = taglineY + 50;
         const startBtn = this.add.text(cx, startBtnY, '[ START GAME ]', {
             fontSize: '28px',
             fontFamily: 'monospace',
@@ -128,7 +128,7 @@ export class MenuScene extends Phaser.Scene {
         const scores = await sm.fetchHighScores();
         if (scores.length === 0) return;
 
-        const startY = 510;
+        const startY = 600;
         this.add.text(cx, startY, '--- HIGH SCORES ---', {
             fontSize: '12px',
             fontFamily: 'monospace',
