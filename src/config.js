@@ -26,7 +26,7 @@ export const CONFIG = {
         Y_OFFSET: 20, // pixels from bottom
         WIDTH: 48,
         HEIGHT: 48,
-        SPACING: 170, // pixels between device centers
+        SPACING: 185, // pixels between device centers
     },
 
     // Scam threats
