@@ -89,7 +89,8 @@ export class MenuScene extends Phaser.Scene {
         }).setOrigin(0.5);
 
         // Start button
-        const startBtn = this.add.text(cx, 460, '[ START GAME ]', {
+        const startBtnY = taglineY + 40;
+        const startBtn = this.add.text(cx, startBtnY, '[ START GAME ]', {
             fontSize: '28px',
             fontFamily: 'monospace',
             color: CONFIG.COLORS.TITLE_TEXT,
