@@ -23,18 +23,23 @@
             -webkit-touch-callout: none;
             -webkit-user-select: none;
             user-select: none;
-            padding: 0 8%;
         }
         #game-container {
-            width: 100%;
             max-height: 100vh;
         }
         #game-container canvas {
             display: block;
-            width: 100% !important;
-            height: auto !important;
             border: 2px solid #00ff88;
             box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+        }
+        @media (max-width: 840px) {
+            body {
+                padding: 0 8%;
+            }
+            #game-container canvas {
+                width: 100% !important;
+                height: auto !important;
+            }
         }
     </style>
 </head>
