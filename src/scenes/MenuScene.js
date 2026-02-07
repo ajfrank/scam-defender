@@ -52,7 +52,8 @@ export class MenuScene extends Phaser.Scene {
             });
         });
 
-        // Controls
+        // Controls — detect mobile vs desktop
+        const isMobile = !this.sys.game.device.os.desktop;
         const ctrlY = 330;
         this.add.text(cx, ctrlY, '--- CONTROLS ---', {
             fontSize: '12px',
@@ -60,12 +61,19 @@ export class MenuScene extends Phaser.Scene {
             color: '#666666',
         }).setOrigin(0.5);
 
-        const controls = [
-            'Arrow Keys / A,D - Move',
-            'Mouse Aim - Target',
-            'Left Click - Fire',
-            'P / Esc - Pause',
-        ];
+        const controls = isMobile
+            ? [
+                'Tap - Fire & Move',
+                'Hero slides toward your tap',
+                'Destroy scams before they',
+                'reach your users!',
+            ]
+            : [
+                'Arrow Keys / A,D - Move',
+                'Mouse Aim - Target',
+                'Left Click - Fire',
+                'P / Esc - Pause',
+            ];
         controls.forEach((c, i) => {
             this.add.text(cx, ctrlY + 25 + i * 20, c, {
                 fontSize: '13px',
