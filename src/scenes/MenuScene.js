@@ -16,22 +16,22 @@ export class MenuScene extends Phaser.Scene {
         const cx = CONFIG.WIDTH / 2;
 
         // Title
-        this.add.text(cx, 120, 'SCAM DEFENDER', {
-            fontSize: '48px',
+        this.add.text(cx, 100, 'SCAM DEFENDER', {
+            fontSize: '64px',
             fontFamily: 'monospace',
             color: CONFIG.COLORS.TITLE_TEXT,
             fontStyle: 'bold',
         }).setOrigin(0.5);
 
         // Subtitle
-        this.add.text(cx, 180, "Protect Meta's users from scams!", {
-            fontSize: '14px',
+        this.add.text(cx, 170, "Protect Meta's users from scams!", {
+            fontSize: '18px',
             fontFamily: 'monospace',
             color: '#aaaaaa',
         }).setOrigin(0.5);
 
         // Threat legend
-        const legendY = 235;
+        const legendY = 230;
         const threats = [
             { name: 'Phishing', color: '#ff4444', symbol: '@' },
             { name: 'Pig Butchering', color: '#ff8800', symbol: '$' },
@@ -40,14 +40,14 @@ export class MenuScene extends Phaser.Scene {
         ];
 
         this.add.text(cx, legendY, '--- INCOMING THREATS ---', {
-            fontSize: '12px',
+            fontSize: '14px',
             fontFamily: 'monospace',
             color: '#666666',
         }).setOrigin(0.5);
 
         threats.forEach((t, i) => {
-            this.add.text(cx - 80, legendY + 30 + i * 24, `${t.symbol}  ${t.name}`, {
-                fontSize: '14px',
+            this.add.text(cx - 100, legendY + 32 + i * 28, `${t.symbol}  ${t.name}`, {
+                fontSize: '18px',
                 fontFamily: 'monospace',
                 color: t.color,
             });
@@ -57,7 +57,7 @@ export class MenuScene extends Phaser.Scene {
         const isMobile = !this.sys.game.device.os.desktop;
         const ctrlY = 390;
         this.add.text(cx, ctrlY, '--- CONTROLS ---', {
-            fontSize: '12px',
+            fontSize: '14px',
             fontFamily: 'monospace',
             color: '#666666',
         }).setOrigin(0.5);
@@ -73,26 +73,26 @@ export class MenuScene extends Phaser.Scene {
                 'P / Esc - Pause',
             ];
         controls.forEach((c, i) => {
-            this.add.text(cx, ctrlY + 30 + i * 24, c, {
-                fontSize: '13px',
+            this.add.text(cx, ctrlY + 32 + i * 26, c, {
+                fontSize: '16px',
                 fontFamily: 'monospace',
                 color: '#888888',
             }).setOrigin(0.5);
         });
 
         // Tagline
-        const taglineY = ctrlY + 30 + controls.length * 24 + 25;
+        const taglineY = ctrlY + 32 + controls.length * 26 + 30;
         this.add.text(cx, taglineY, 'Destroy scams before they reach your users!', {
-            fontSize: '16px',
+            fontSize: '20px',
             fontFamily: 'monospace',
             color: '#ff6644',
             fontStyle: 'bold',
         }).setOrigin(0.5);
 
         // Start button
-        const startBtnY = taglineY + 50;
+        const startBtnY = taglineY + 55;
         const startBtn = this.add.text(cx, startBtnY, '[ START GAME ]', {
-            fontSize: '28px',
+            fontSize: '32px',
             fontFamily: 'monospace',
             color: CONFIG.COLORS.TITLE_TEXT,
             fontStyle: 'bold',
@@ -120,24 +120,23 @@ export class MenuScene extends Phaser.Scene {
         });
 
         // High scores — fetch from server then display
-        this._loadAndShowHighScores(cx);
+        this._loadAndShowHighScores(cx, startBtnY + 60);
     }
 
-    async _loadAndShowHighScores(cx) {
+    async _loadAndShowHighScores(cx, startY) {
         const sm = new ScoreManager();
         const scores = await sm.fetchHighScores();
         if (scores.length === 0) return;
 
-        const startY = 600;
         this.add.text(cx, startY, '--- HIGH SCORES ---', {
-            fontSize: '12px',
+            fontSize: '14px',
             fontFamily: 'monospace',
             color: '#666666',
         }).setOrigin(0.5);
 
         scores.forEach((entry, i) => {
-            this.add.text(cx, startY + 20 + i * 18, `${i + 1}. ${entry.name.padEnd(5)} ${String(entry.score).padStart(8)}`, {
-                fontSize: '13px',
+            this.add.text(cx, startY + 24 + i * 22, `${i + 1}. ${entry.name.padEnd(5)} ${String(entry.score).padStart(8)}`, {
+                fontSize: '16px',
                 fontFamily: 'monospace',
                 color: i === 0 ? '#ffcc00' : '#888888',
             }).setOrigin(0.5);
