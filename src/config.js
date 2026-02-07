@@ -1,8 +1,8 @@
 // Game configuration constants
 export const CONFIG = {
     // Canvas
-    WIDTH: 800,
-    HEIGHT: 600,
+    WIDTH: 920,
+    HEIGHT: 690,
 
     // Hero
     HERO: {
