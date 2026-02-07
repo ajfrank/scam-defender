@@ -7,7 +7,7 @@ export class Hero extends Phaser.GameObjects.Container {
 
         this.lastFireTime = 0;
         this.speed = CONFIG.HERO.SPEED;
-        this.targetX = x; // for mobile touch tracking
+        this.isMobile = !scene.sys.game.device.os.desktop;
 
         // Try to use SVG texture, fall back to generated graphic
         if (scene.textures.exists('hero')) {
@@ -49,25 +49,19 @@ export class Hero extends Phaser.GameObjects.Container {
     }
 
     update(cursors, pointer) {
-        // Keyboard movement
-        if (cursors.left.isDown || this.scene.keys.a.isDown) {
-            this.x -= this.speed * this.scene.game.loop.delta / 1000;
-            this.targetX = this.x;
-        } else if (cursors.right.isDown || this.scene.keys.d.isDown) {
-            this.x += this.speed * this.scene.game.loop.delta / 1000;
-            this.targetX = this.x;
-        } else {
-            // Mobile: slide toward last tap X position
-            const diff = this.targetX - this.x;
-            if (Math.abs(diff) > 2) {
-                this.x += Math.sign(diff) * Math.min(this.speed * this.scene.game.loop.delta / 1000, Math.abs(diff));
+        // Desktop only: keyboard movement
+        if (!this.isMobile) {
+            if (cursors.left.isDown || this.scene.keys.a.isDown) {
+                this.x -= this.speed * this.scene.game.loop.delta / 1000;
+            } else if (cursors.right.isDown || this.scene.keys.d.isDown) {
+                this.x += this.speed * this.scene.game.loop.delta / 1000;
             }
+
+            // Clamp to screen bounds
+            this.x = Phaser.Math.Clamp(this.x, CONFIG.HERO.SIZE / 2, CONFIG.WIDTH - CONFIG.HERO.SIZE / 2);
         }
 
-        // Clamp to screen bounds
-        this.x = Phaser.Math.Clamp(this.x, CONFIG.HERO.SIZE / 2, CONFIG.WIDTH - CONFIG.HERO.SIZE / 2);
-
-        // Rotate barrel toward mouse
+        // Rotate barrel toward mouse/last tap
         const angle = Phaser.Math.Angle.Between(this.x, this.y, pointer.worldX, pointer.worldY);
         this.barrel.setRotation(angle + Math.PI / 2);
     }

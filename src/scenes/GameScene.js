@@ -48,8 +48,6 @@ export class GameScene extends Phaser.Scene {
         // Fire on click/tap
         this.input.on('pointerdown', (pointer) => {
             if (this.paused) return;
-            // Move hero toward tap X on mobile
-            this.hero.targetX = pointer.worldX;
             if (this.hero.canFire()) {
                 this.fireInterceptor(pointer.worldX, pointer.worldY);
             }
