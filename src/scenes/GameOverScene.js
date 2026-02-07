@@ -63,6 +63,8 @@ export class GameOverScene extends Phaser.Scene {
     }
 
     _showHighScoreEntry(cx) {
+        const isMobile = !this.sys.game.device.os.desktop;
+
         this.add.text(cx, 270, 'NEW HIGH SCORE!', {
             fontSize: '22px',
             fontFamily: 'monospace',
@@ -70,7 +72,7 @@ export class GameOverScene extends Phaser.Scene {
             fontStyle: 'bold',
         }).setOrigin(0.5);
 
-        this.add.text(cx, 300, 'Enter your initials:', {
+        this.add.text(cx, 300, isMobile ? 'Tap your initials:' : 'Enter your initials:', {
             fontSize: '14px',
             fontFamily: 'monospace',
             color: '#888888',
@@ -86,23 +88,98 @@ export class GameOverScene extends Phaser.Scene {
             letterSpacing: 8,
         }).setOrigin(0.5);
 
+        if (isMobile) {
+            this._showTapKeyboard(cx, 380);
+        } else {
+            this._setupKeyboardInput(cx);
+        }
+    }
+
+    _addInitialChar(char, cx) {
+        if (this.initials.length >= 3) return;
+        this.initials += char;
+        this.game.audio.playMenuSelect();
+        this._updateInitialsDisplay();
+
+        if (this.initials.length === 3) {
+            // Disable letter buttons
+            if (this.letterButtons) {
+                this.letterButtons.forEach(b => b.disableInteractive());
+            }
+            this.scoreManager.saveHighScore(this.initials).then(() => {
+                this.time.delayedCall(500, () => {
+                    // Destroy letter grid if present
+                    if (this.letterButtons) {
+                        this.letterButtons.forEach(b => b.destroy());
+                        this.letterButtons = null;
+                    }
+                    if (this.backspaceBtn) {
+                        this.backspaceBtn.destroy();
+                        this.backspaceBtn = null;
+                    }
+                    this._showHighScores(cx, 400);
+                    this._showRestartButton(cx, 540);
+                });
+            });
+        }
+    }
+
+    _showTapKeyboard(cx, startY) {
+        const rows = [
+            'ABCDEFGHI',
+            'JKLMNOPQR',
+            'STUVWXYZ0',
+            '123456789',
+        ];
+        const cellSize = 36;
+        this.letterButtons = [];
+
+        rows.forEach((row, rowIdx) => {
+            const rowWidth = row.length * cellSize;
+            const rowStartX = cx - rowWidth / 2 + cellSize / 2;
+
+            for (let i = 0; i < row.length; i++) {
+                const char = row[i];
+                const bx = rowStartX + i * cellSize;
+                const by = startY + rowIdx * cellSize;
+
+                const btn = this.add.text(bx, by, char, {
+                    fontSize: '20px',
+                    fontFamily: 'monospace',
+                    color: '#ffffff',
+                    backgroundColor: '#333333',
+                    padding: { x: 6, y: 4 },
+                }).setOrigin(0.5).setInteractive();
+
+                btn.on('pointerdown', () => this._addInitialChar(char, cx));
+                this.letterButtons.push(btn);
+            }
+        });
+
+        // Backspace button
+        const backY = startY + rows.length * cellSize;
+        this.backspaceBtn = this.add.text(cx, backY, '[ DEL ]', {
+            fontSize: '18px',
+            fontFamily: 'monospace',
+            color: '#ff6644',
+            fontStyle: 'bold',
+        }).setOrigin(0.5).setInteractive();
+
+        this.backspaceBtn.on('pointerdown', () => {
+            if (this.initials.length > 0) {
+                this.initials = this.initials.slice(0, -1);
+                this._updateInitialsDisplay();
+            }
+        });
+    }
+
+    _setupKeyboardInput(cx) {
         this.input.keyboard.on('keydown', (event) => {
             if (this.initials.length >= 3) return;
 
             const key = event.key.toUpperCase();
             if (/^[A-Z0-9]$/.test(key)) {
-                this.initials += key;
-                this.game.audio.playMenuSelect();
-                this._updateInitialsDisplay();
-
-                if (this.initials.length === 3) {
-                    this.scoreManager.saveHighScore(this.initials).then(() => {
-                        this.time.delayedCall(500, () => {
-                            this._showHighScores(cx, 400);
-                            this._showRestartButton(cx, 540);
-                        });
-                    });
-                }
+                this._addInitialChar(key, cx);
             }
 
             if (event.key === 'Backspace' && this.initials.length > 0) {
