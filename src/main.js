@@ -17,6 +17,9 @@ const config = {
             debug: false,
         },
     },
+    input: {
+        touch: { capture: true },
+    },
     scene: [BootScene, MenuScene, GameScene, GameOverScene],
     scale: {
         mode: Phaser.Scale.FIT,
