@@ -1,5 +1,6 @@
 import { CONFIG } from '../config.js';
 import { AudioManager } from '../systems/AudioManager.js';
+import { ScoreManager } from '../systems/ScoreManager.js';
 
 export class MenuScene extends Phaser.Scene {
     constructor() {
@@ -118,12 +119,13 @@ export class MenuScene extends Phaser.Scene {
             this.scene.start('GameScene');
         });
 
-        // High scores
-        this._showHighScores(cx);
+        // High scores — fetch from server then display
+        this._loadAndShowHighScores(cx);
     }
 
-    _showHighScores(cx) {
-        const scores = this._getHighScores();
+    async _loadAndShowHighScores(cx) {
+        const sm = new ScoreManager();
+        const scores = await sm.fetchHighScores();
         if (scores.length === 0) return;
 
         const startY = 510;
@@ -140,14 +142,5 @@ export class MenuScene extends Phaser.Scene {
                 color: i === 0 ? '#ffcc00' : '#888888',
             }).setOrigin(0.5);
         });
-    }
-
-    _getHighScores() {
-        try {
-            const data = localStorage.getItem(CONFIG.HIGH_SCORES.STORAGE_KEY);
-            return data ? JSON.parse(data) : [];
-        } catch {
-            return [];
-        }
     }
 }

@@ -43,7 +43,14 @@ export class GameOverScene extends Phaser.Scene {
             color: '#aaaaaa',
         }).setOrigin(0.5);
 
-        // High score entry
+        // Fetch latest scores then show UI
+        this._initScoreUI(cx);
+    }
+
+    async _initScoreUI(cx) {
+        // Fetch latest scores from server before checking
+        await this.scoreManager.fetchHighScores();
+
         if (this.scoreManager.isHighScore()) {
             this._showHighScoreEntry(cx);
         } else {
@@ -86,11 +93,11 @@ export class GameOverScene extends Phaser.Scene {
                 this._updateInitialsDisplay();
 
                 if (this.initials.length === 3) {
-                    this.scoreManager.saveHighScore(this.initials);
-
-                    this.time.delayedCall(500, () => {
-                        this._showHighScores(cx, 400);
-                        this._showRestartButton(cx, 540);
+                    this.scoreManager.saveHighScore(this.initials).then(() => {
+                        this.time.delayedCall(500, () => {
+                            this._showHighScores(cx, 400);
+                            this._showRestartButton(cx, 540);
+                        });
                     });
                 }
             }
