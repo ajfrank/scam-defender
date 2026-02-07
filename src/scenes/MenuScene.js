@@ -82,7 +82,7 @@ export class MenuScene extends Phaser.Scene {
         // Tagline
         const taglineY = ctrlY + 25 + controls.length * 20 + 15;
         this.add.text(cx, taglineY, 'Destroy scams before they reach your users!', {
-            fontSize: '14px',
+            fontSize: '16px',
             fontFamily: 'monospace',
             color: '#ff6644',
             fontStyle: 'bold',
