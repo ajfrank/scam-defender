@@ -51,6 +51,9 @@ export class GameOverScene extends Phaser.Scene {
         // Fetch latest scores from server before checking
         await this.scoreManager.fetchHighScores();
 
+        // Guard against scene having been stopped during async fetch
+        if (!this.scene.isActive()) return;
+
         if (this.scoreManager.isHighScore()) {
             this._showHighScoreEntry(cx);
         } else {

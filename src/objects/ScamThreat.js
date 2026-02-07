@@ -39,8 +39,8 @@ export class ScamThreat extends Phaser.Physics.Arcade.Sprite {
         this.setDisplaySize(CONFIG.THREATS.SIZE, CONFIG.THREATS.SIZE);
         this.setVelocityY(speed);
 
-        // Slight wobble
-        scene.tweens.add({
+        // Slight wobble — store reference for cleanup
+        this.wobbleTween = scene.tweens.add({
             targets: this,
             x: this.x + Phaser.Math.Between(-15, 15),
             duration: 1000 + Math.random() * 500,
@@ -50,14 +50,15 @@ export class ScamThreat extends Phaser.Physics.Arcade.Sprite {
         });
     }
 
-    update() {
-        // Off-screen cleanup is handled by GameScene._checkThreatDeviceCollisions
-        // so the wave manager is properly notified
-    }
-
     hit() {
         if (!this.alive) return false;
         this.alive = false;
+
+        // Kill wobble tween to prevent memory leak
+        if (this.wobbleTween) {
+            this.wobbleTween.stop();
+            this.wobbleTween = null;
+        }
 
         // Flash and destroy
         this.scene.tweens.add({
@@ -72,5 +73,13 @@ export class ScamThreat extends Phaser.Physics.Arcade.Sprite {
         });
 
         return true;
+    }
+
+    // Clean up when destroyed directly (off-screen)
+    preDestroy() {
+        if (this.wobbleTween) {
+            this.wobbleTween.stop();
+            this.wobbleTween = null;
+        }
     }
 }

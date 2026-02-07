@@ -70,8 +70,10 @@ export class WaveManager {
     }
 
     destroy() {
+        this.waveActive = false;
         if (this.spawnTimer) {
             this.spawnTimer.destroy();
+            this.spawnTimer = null;
         }
     }
 }

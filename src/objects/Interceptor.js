@@ -69,6 +69,7 @@ export class Interceptor extends Phaser.Physics.Arcade.Sprite {
 
         // Create explosion graphics
         const gfx = scene.add.graphics();
+        this.explosionGfx = gfx;
 
         scene.tweens.add({
             targets: state,
@@ -94,6 +95,11 @@ export class Interceptor extends Phaser.Physics.Arcade.Sprite {
     cleanup() {
         if (this.trail) {
             this.trail.destroy();
+            this.trail = null;
+        }
+        if (this.explosionGfx) {
+            this.explosionGfx.destroy();
+            this.explosionGfx = null;
         }
         this.destroy();
     }

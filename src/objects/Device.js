@@ -68,7 +68,6 @@ export class Device extends Phaser.GameObjects.Container {
 
         // Flash red then fade
         let flashCount = 0;
-        const originalAlpha = this.avatar.alpha;
         this.scene.time.addEvent({
             delay: 100,
             repeat: 5,

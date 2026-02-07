@@ -16,6 +16,8 @@ export class GameScene extends Phaser.Scene {
         this.scoreManager = new ScoreManager();
         this.waveManager = new WaveManager(this);
         this.paused = false;
+        this.gameOver = false;
+        this.aliveDeviceCount = CONFIG.DEVICES.COUNT;
 
         // Groups
         this.interceptors = [];
@@ -91,7 +93,7 @@ export class GameScene extends Phaser.Scene {
             color: CONFIG.COLORS.HUD_TEXT,
         }).setOrigin(0.5, 0).setDepth(100);
 
-        const aliveCount = this.devices.filter(d => d.alive).length;
+        const aliveCount = this.aliveDeviceCount;
         this.devicesText = this.add.text(CONFIG.WIDTH - 10, 10, `USERS: ${aliveCount}/${CONFIG.DEVICES.COUNT}`, {
             fontSize: '18px',
             fontFamily: 'monospace',
@@ -235,7 +237,8 @@ export class GameScene extends Phaser.Scene {
         });
 
         // Start next wave after delay
-        this.time.delayedCall(3000, () => {
+        this.waveDelayTimer = this.time.delayedCall(3000, () => {
+            if (this.gameOver) return;
             this.waveManager.startNextWave();
             this._showWaveText(this.waveManager.wave);
         });
@@ -266,6 +269,7 @@ export class GameScene extends Phaser.Scene {
                     threat.alive = false;
                     threat.destroy();
                     hitDevice.hit();
+                    this.aliveDeviceCount--;
                     this.audio.playDeviceHit();
                     this.cameras.main.shake(200, 0.01);
                     this.waveManager.threatDestroyed();
@@ -287,6 +291,7 @@ export class GameScene extends Phaser.Scene {
 
                     if (closestDevice) {
                         closestDevice.hit();
+                        this.aliveDeviceCount--;
                         this.audio.playDeviceHit();
                         this.cameras.main.shake(200, 0.01);
                     }
@@ -298,27 +303,31 @@ export class GameScene extends Phaser.Scene {
     }
 
     _checkGameOver() {
-        const aliveDevices = this.devices.filter(d => d.alive);
-        if (aliveDevices.length === 0) {
-            this.audio.playGameOver();
-            this.waveManager.destroy();
+        if (this.gameOver) return;
+        if (this.aliveDeviceCount > 0) return;
 
-            // Brief delay then game over
-            this.time.delayedCall(1000, () => {
-                this.scene.start('GameOverScene', {
-                    score: this.scoreManager.getScore(),
-                    wave: this.waveManager.wave,
-                    scoreManager: this.scoreManager,
-                });
-            });
+        this.gameOver = true;
+        this.audio.playGameOver();
+        this.waveManager.destroy();
 
-            // Prevent further updates
-            this.paused = true;
+        // Cancel pending wave delay timer
+        if (this.waveDelayTimer) {
+            this.waveDelayTimer.destroy();
+            this.waveDelayTimer = null;
         }
+
+        // Brief delay then game over
+        this.time.delayedCall(1000, () => {
+            this.scene.start('GameOverScene', {
+                score: this.scoreManager.getScore(),
+                wave: this.waveManager.wave,
+                scoreManager: this.scoreManager,
+            });
+        });
     }
 
     update() {
-        if (this.paused) return;
+        if (this.paused || this.gameOver) return;
 
         // Clear explosion tracking each frame
         this.explodedThreats.clear();
@@ -352,17 +361,26 @@ export class GameScene extends Phaser.Scene {
         // Update HUD
         this.scoreText.setText(`SCORE: ${this.scoreManager.getScore()}`);
         this.waveText.setText(`WAVE: ${this.waveManager.wave}`);
-        const aliveCount = this.devices.filter(d => d.alive).length;
-        this.devicesText.setText(`USERS: ${aliveCount}/${CONFIG.DEVICES.COUNT}`);
+        this.devicesText.setText(`USERS: ${this.aliveDeviceCount}/${CONFIG.DEVICES.COUNT}`);
 
         // Color the devices count based on remaining
-        if (aliveCount <= 1) {
+        if (this.aliveDeviceCount <= 1) {
             this.devicesText.setColor('#ff4444');
-        } else if (aliveCount <= 2) {
+        } else if (this.aliveDeviceCount <= 2) {
             this.devicesText.setColor('#ff8800');
         }
 
         // Check game over
         this._checkGameOver();
+    }
+
+    shutdown() {
+        // Clean up when scene stops/restarts
+        this.waveManager.destroy();
+        if (this.waveDelayTimer) {
+            this.waveDelayTimer.destroy();
+            this.waveDelayTimer = null;
+        }
+        this.input.setDefaultCursor('default');
     }
 }
