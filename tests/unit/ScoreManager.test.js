@@ -24,25 +24,25 @@ describe('ScoreManager', () => {
     });
 
     describe('addScore', () => {
-        it('should add base points for phishing (100)', () => {
+        it('should add base points for phishing', () => {
             const points = sm.addScore('phishing');
-            expect(points).toBe(100);
-            expect(sm.getScore()).toBe(100);
+            expect(points).toBe(CONFIG.SCORE.PHISHING);
+            expect(sm.getScore()).toBe(CONFIG.SCORE.PHISHING);
         });
 
-        it('should add base points for pig_butchering (200)', () => {
+        it('should add base points for pig_butchering', () => {
             const points = sm.addScore('pig_butchering');
-            expect(points).toBe(200);
+            expect(points).toBe(CONFIG.SCORE.PIG_BUTCHERING);
         });
 
-        it('should add base points for fake_romance (150)', () => {
+        it('should add base points for fake_romance', () => {
             const points = sm.addScore('fake_romance');
-            expect(points).toBe(150);
+            expect(points).toBe(CONFIG.SCORE.FAKE_ROMANCE);
         });
 
-        it('should add base points for celeb_bait (125)', () => {
+        it('should add base points for celeb_bait', () => {
             const points = sm.addScore('celeb_bait');
-            expect(points).toBe(125);
+            expect(points).toBe(CONFIG.SCORE.CELEB_BAIT);
         });
 
         it('should default to 100 for unknown threat types', () => {
@@ -53,27 +53,27 @@ describe('ScoreManager', () => {
         it('should accumulate score across multiple calls', () => {
             sm.addScore('phishing');
             sm.addScore('pig_butchering');
-            expect(sm.getScore()).toBe(300);
+            expect(sm.getScore()).toBe(CONFIG.SCORE.PHISHING + CONFIG.SCORE.PIG_BUTCHERING);
         });
 
         it('should add MULTI_KILL_BONUS for multiKillCount > 1', () => {
             const points = sm.addScore('phishing', 2);
-            expect(points).toBe(100 + CONFIG.SCORE.MULTI_KILL_BONUS);
+            expect(points).toBe(CONFIG.SCORE.PHISHING + CONFIG.SCORE.MULTI_KILL_BONUS);
         });
 
         it('should add 2x MULTI_KILL_BONUS for multiKillCount = 3', () => {
             const points = sm.addScore('phishing', 3);
-            expect(points).toBe(100 + 2 * CONFIG.SCORE.MULTI_KILL_BONUS);
+            expect(points).toBe(CONFIG.SCORE.PHISHING + 2 * CONFIG.SCORE.MULTI_KILL_BONUS);
         });
 
         it('should not add bonus for multiKillCount = 1', () => {
             const points = sm.addScore('phishing', 1);
-            expect(points).toBe(100);
+            expect(points).toBe(CONFIG.SCORE.PHISHING);
         });
     });
 
     describe('addWaveBonus', () => {
-        it('should add WAVE_BONUS (500) to score', () => {
+        it('should add WAVE_BONUS to score', () => {
             sm.addWaveBonus();
             expect(sm.getScore()).toBe(CONFIG.SCORE.WAVE_BONUS);
         });
@@ -86,7 +86,7 @@ describe('ScoreManager', () => {
         it('should accumulate with existing score', () => {
             sm.addScore('phishing');
             sm.addWaveBonus();
-            expect(sm.getScore()).toBe(100 + CONFIG.SCORE.WAVE_BONUS);
+            expect(sm.getScore()).toBe(CONFIG.SCORE.PHISHING + CONFIG.SCORE.WAVE_BONUS);
         });
     });
 
@@ -94,7 +94,7 @@ describe('ScoreManager', () => {
         it('should return current score', () => {
             expect(sm.getScore()).toBe(0);
             sm.addScore('phishing');
-            expect(sm.getScore()).toBe(100);
+            expect(sm.getScore()).toBe(CONFIG.SCORE.PHISHING);
         });
     });
 

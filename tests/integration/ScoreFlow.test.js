@@ -10,26 +10,30 @@ describe('Score Flow Integration', () => {
     });
 
     it('should accumulate score across multiple threat kills', () => {
-        sm.addScore('phishing', 1);    // 100
-        sm.addScore('pig_butchering', 1); // 200
-        sm.addScore('fake_romance', 1);   // 150
-        sm.addScore('celeb_bait', 1);     // 125
-        expect(sm.getScore()).toBe(575);
+        sm.addScore('phishing', 1);
+        sm.addScore('pig_butchering', 1);
+        sm.addScore('fake_romance', 1);
+        sm.addScore('celeb_bait', 1);
+        const expected = CONFIG.SCORE.PHISHING + CONFIG.SCORE.PIG_BUTCHERING
+            + CONFIG.SCORE.FAKE_ROMANCE + CONFIG.SCORE.CELEB_BAIT;
+        expect(sm.getScore()).toBe(expected);
     });
 
     it('should handle multi-kill scoring correctly', () => {
         // Simulate an explosion hitting 3 phishing threats
-        sm.addScore('phishing', 1); // 100
-        sm.addScore('phishing', 2); // 100 + 50 = 150
-        sm.addScore('phishing', 3); // 100 + 100 = 200
-        expect(sm.getScore()).toBe(450);
+        const base = CONFIG.SCORE.PHISHING;
+        const bonus = CONFIG.SCORE.MULTI_KILL_BONUS;
+        sm.addScore('phishing', 1); // base
+        sm.addScore('phishing', 2); // base + bonus
+        sm.addScore('phishing', 3); // base + 2*bonus
+        expect(sm.getScore()).toBe(3 * base + 3 * bonus);
     });
 
     it('should add wave bonus on wave completion', () => {
         sm.addScore('phishing');
         const bonus = sm.addWaveBonus();
         expect(bonus).toBe(CONFIG.SCORE.WAVE_BONUS);
-        expect(sm.getScore()).toBe(100 + CONFIG.SCORE.WAVE_BONUS);
+        expect(sm.getScore()).toBe(CONFIG.SCORE.PHISHING + CONFIG.SCORE.WAVE_BONUS);
     });
 
     it('should correctly determine high score eligibility with empty list', () => {
@@ -73,14 +77,16 @@ describe('Score Flow Integration', () => {
         expect(sm.getScore()).toBe(0);
 
         // Play a game
-        sm.addScore('phishing');       // 100
-        sm.addScore('pig_butchering'); // 200
-        sm.addWaveBonus();             // 500
-        sm.addScore('fake_romance');   // 150
-        sm.addScore('celeb_bait');     // 125
-        sm.addWaveBonus();             // 500
+        sm.addScore('phishing');
+        sm.addScore('pig_butchering');
+        sm.addWaveBonus();
+        sm.addScore('fake_romance');
+        sm.addScore('celeb_bait');
+        sm.addWaveBonus();
 
-        const expectedTotal = 100 + 200 + 500 + 150 + 125 + 500;
+        const expectedTotal = CONFIG.SCORE.PHISHING + CONFIG.SCORE.PIG_BUTCHERING
+            + CONFIG.SCORE.WAVE_BONUS + CONFIG.SCORE.FAKE_ROMANCE
+            + CONFIG.SCORE.CELEB_BAIT + CONFIG.SCORE.WAVE_BONUS;
         expect(sm.getScore()).toBe(expectedTotal);
 
         // Save high score

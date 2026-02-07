@@ -202,9 +202,8 @@ describe('WaveManager', () => {
 
         it('should not trigger wave complete if threats still remain', () => {
             wm.threatDestroyed();
-            if (wm.threatsRemaining > 0) {
-                expect(mockScene.onWaveComplete).not.toHaveBeenCalled();
-            }
+            expect(wm.threatsRemaining).toBeGreaterThan(0);
+            expect(mockScene.onWaveComplete).not.toHaveBeenCalled();
         });
     });
 

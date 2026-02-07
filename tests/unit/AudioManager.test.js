@@ -120,25 +120,15 @@ describe('AudioManager', () => {
     });
 
     describe('guard clauses', () => {
-        it('playShoot should be a no-op when context unavailable', () => {
+        it.each([
+            ['playShoot'],
+            ['playExplosion'],
+            ['playGameOver'],
+        ])('%s should be a no-op when context unavailable', (method) => {
             AudioContext.mockImplementationOnce(() => {
                 throw new Error('Not supported');
             });
-            expect(() => audio.playShoot()).not.toThrow();
-        });
-
-        it('playExplosion should be a no-op when context unavailable', () => {
-            AudioContext.mockImplementationOnce(() => {
-                throw new Error('Not supported');
-            });
-            expect(() => audio.playExplosion()).not.toThrow();
-        });
-
-        it('playGameOver should be a no-op when context unavailable', () => {
-            AudioContext.mockImplementationOnce(() => {
-                throw new Error('Not supported');
-            });
-            expect(() => audio.playGameOver()).not.toThrow();
+            expect(() => audio[method]()).not.toThrow();
         });
     });
 });

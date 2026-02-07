@@ -47,7 +47,6 @@ describe('Hero', () => {
         });
 
         it('should return false when cooldown has not elapsed', () => {
-            mockScene.time.now = 1000;
             hero.lastFireTime = 1000;
             mockScene.time.now = 1000 + CONFIG.HERO.FIRE_COOLDOWN - 1;
             expect(hero.canFire()).toBe(false);

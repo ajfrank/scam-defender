@@ -88,7 +88,7 @@ function createMockGraphics() {
 }
 
 function createMockText() {
-    const textObj = {
+    return {
         setText: vi.fn().mockReturnThis(),
         setColor: vi.fn().mockReturnThis(),
         setOrigin: vi.fn().mockReturnThis(),
@@ -101,7 +101,6 @@ function createMockText() {
         y: 0,
         text: '',
     };
-    return textObj;
 }
 
 function createMockAdd() {
@@ -118,7 +117,6 @@ function createMockAdd() {
             const rect = new MockGameObject();
             rect.x = x;
             rect.y = y;
-            rect.setRotation = vi.fn().mockReturnThis();
             return rect;
         }),
         graphics: vi.fn(() => createMockGraphics()),
@@ -229,8 +227,6 @@ const Phaser = {
     Game: vi.fn(),
 };
 
-// Export for module use and attach factory helper
-Phaser._createMockScene = createMockScene;
-
+// Export for module use
 export default Phaser;
 export { createMockScene, createMockGraphics, createMockText };

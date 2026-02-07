@@ -93,6 +93,12 @@ describe('Interceptor', () => {
     });
 
     describe('explode', () => {
+        beforeEach(() => {
+            // Clear mocks triggered by the constructor
+            mockScene.add.graphics.mockClear();
+            mockScene.tweens.add.mockClear();
+        });
+
         it('should set hasExploded to true', () => {
             interceptor.explode();
             expect(interceptor.hasExploded).toBe(true);
@@ -110,13 +116,11 @@ describe('Interceptor', () => {
         });
 
         it('should create explosion graphics', () => {
-            mockScene.add.graphics.mockClear();
             interceptor.explode();
             expect(mockScene.add.graphics).toHaveBeenCalled();
         });
 
         it('should start explosion tween', () => {
-            mockScene.tweens.add.mockClear();
             interceptor.explode();
             expect(mockScene.tweens.add).toHaveBeenCalled();
         });

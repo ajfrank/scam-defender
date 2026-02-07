@@ -73,7 +73,9 @@ globalThis.localStorage = {
 
 // Reset mocks between tests
 beforeEach(() => {
+    // Clear store before clearing mock history so localStorage.clear()
+    // doesn't leave a phantom call in its mock.calls
+    Object.keys(store).forEach(k => delete store[k]);
     vi.clearAllMocks();
-    localStorage.clear();
     fetch.mockReset();
 });
