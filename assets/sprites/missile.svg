@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 32" width="16" height="32">
+  <!-- Missile body -->
+  <rect x="4" y="8" width="8" height="18" rx="2" fill="#00ff88"/>
+  <!-- Nose cone -->
+  <polygon points="8,0 3,8 13,8" fill="#00cc66"/>
+  <!-- Fins -->
+  <polygon points="4,26 0,32 4,28" fill="#00aa55"/>
+  <polygon points="12,26 16,32 12,28" fill="#00aa55"/>
+  <!-- Center fin -->
+  <polygon points="6,26 8,32 10,26" fill="#00aa55"/>
+  <!-- Window/detail -->
+  <circle cx="8" cy="13" r="2" fill="#aaffcc" opacity="0.8"/>
+  <!-- Exhaust glow -->
+  <ellipse cx="8" cy="30" rx="3" ry="2" fill="#ffaa00" opacity="0.6"/>
+</svg>
