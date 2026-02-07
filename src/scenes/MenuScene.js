@@ -64,8 +64,6 @@ export class MenuScene extends Phaser.Scene {
         const controls = isMobile
             ? [
                 'Tap anywhere to fire!',
-                'Destroy scams before they',
-                'reach your users!',
             ]
             : [
                 'Arrow Keys / A,D - Move',
@@ -80,6 +78,15 @@ export class MenuScene extends Phaser.Scene {
                 color: '#888888',
             }).setOrigin(0.5);
         });
+
+        // Tagline
+        const taglineY = ctrlY + 25 + controls.length * 20 + 15;
+        this.add.text(cx, taglineY, 'Destroy scams before they reach your users!', {
+            fontSize: '14px',
+            fontFamily: 'monospace',
+            color: '#ff6644',
+            fontStyle: 'bold',
+        }).setOrigin(0.5);
 
         // Start button
         const startBtn = this.add.text(cx, 460, '[ START GAME ]', {
