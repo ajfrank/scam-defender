@@ -63,8 +63,7 @@ export class MenuScene extends Phaser.Scene {
 
         const controls = isMobile
             ? [
-                'Tap - Fire & Move',
-                'Hero slides toward your tap',
+                'Tap anywhere to fire!',
                 'Destroy scams before they',
                 'reach your users!',
             ]
