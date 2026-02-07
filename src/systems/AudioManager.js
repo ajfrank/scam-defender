@@ -23,14 +23,6 @@ export class AudioManager {
         return this.initialized;
     }
 
-    _scheduleCleanup(nodes, stopTime) {
-        const cleanup = () => {
-            nodes.forEach(n => { try { n.disconnect(); } catch {} });
-        };
-        const delayMs = (stopTime - this.ctx.currentTime) * 1000 + 50;
-        setTimeout(cleanup, Math.max(delayMs, 0));
-    }
-
     // Short rising tone
     playShoot() {
         if (!this._ensureContext()) return;
@@ -50,7 +42,6 @@ export class AudioManager {
         gain.connect(this.ctx.destination);
         osc.start(now);
         osc.stop(end);
-        this._scheduleCleanup([osc, gain], end);
     }
 
     // White noise burst with decay
@@ -83,7 +74,6 @@ export class AudioManager {
         filter.connect(gain);
         gain.connect(this.ctx.destination);
         source.start(now);
-        this._scheduleCleanup([source, filter, gain], end);
     }
 
     // Satisfying pop
@@ -105,7 +95,6 @@ export class AudioManager {
         gain.connect(this.ctx.destination);
         osc.start(now);
         osc.stop(end);
-        this._scheduleCleanup([osc, gain], end);
     }
 
     // Low thud + alarm
@@ -126,7 +115,6 @@ export class AudioManager {
         gain1.connect(this.ctx.destination);
         osc1.start(now);
         osc1.stop(end1);
-        this._scheduleCleanup([osc1, gain1], end1);
 
         // Alarm beep
         const osc2 = this.ctx.createOscillator();
@@ -143,7 +131,6 @@ export class AudioManager {
         gain2.connect(this.ctx.destination);
         osc2.start(now + 0.1);
         osc2.stop(end2);
-        this._scheduleCleanup([osc2, gain2], end2);
     }
 
     // Descending tone sequence
@@ -168,7 +155,6 @@ export class AudioManager {
             gain.connect(this.ctx.destination);
             osc.start(t);
             osc.stop(end);
-            this._scheduleCleanup([osc, gain], end);
         });
     }
 
@@ -194,7 +180,6 @@ export class AudioManager {
             gain.connect(this.ctx.destination);
             osc.start(t);
             osc.stop(end);
-            this._scheduleCleanup([osc, gain], end);
         });
     }
 
@@ -216,6 +201,5 @@ export class AudioManager {
         gain.connect(this.ctx.destination);
         osc.start(now);
         osc.stop(end);
-        this._scheduleCleanup([osc, gain], end);
     }
 }
