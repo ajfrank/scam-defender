@@ -134,7 +134,7 @@ export class MenuScene extends Phaser.Scene {
             color: '#666666',
         }).setOrigin(0.5);
 
-        scores.forEach((entry, i) => {
+        scores.slice(0, 6).forEach((entry, i) => {
             this.add.text(cx, startY + 24 + i * 22, `${i + 1}. ${entry.name.padEnd(5)} ${String(entry.score).padStart(8)}`, {
                 fontSize: '16px',
                 fontFamily: 'monospace',
