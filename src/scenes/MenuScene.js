@@ -16,22 +16,22 @@ export class MenuScene extends Phaser.Scene {
         const cx = CONFIG.WIDTH / 2;
 
         // Title
-        this.add.text(cx, 80, 'SCAM DEFENDER', {
-            fontSize: '64px',
+        this.add.text(cx, 55, 'SCAM DEFENDER', {
+            fontSize: '48px',
             fontFamily: 'monospace',
             color: CONFIG.COLORS.TITLE_TEXT,
             fontStyle: 'bold',
         }).setOrigin(0.5);
 
         // Subtitle
-        this.add.text(cx, 140, "Protect Meta's users from scams!", {
+        this.add.text(cx, 100, "Protect Meta's users from scams!", {
             fontSize: '18px',
             fontFamily: 'monospace',
             color: '#aaaaaa',
         }).setOrigin(0.5);
 
         // Threat legend
-        const legendY = 190;
+        const legendY = 140;
         const threats = [
             { name: 'Phishing', color: '#ff4444', symbol: '@' },
             { name: 'Pig Butchering', color: '#ff8800', symbol: '$' },
@@ -46,7 +46,7 @@ export class MenuScene extends Phaser.Scene {
         }).setOrigin(0.5);
 
         threats.forEach((t, i) => {
-            this.add.text(cx - 100, legendY + 32 + i * 28, `${t.symbol}  ${t.name}`, {
+            this.add.text(cx - 100, legendY + 28 + i * 24, `${t.symbol}  ${t.name}`, {
                 fontSize: '18px',
                 fontFamily: 'monospace',
                 color: t.color,
@@ -55,7 +55,7 @@ export class MenuScene extends Phaser.Scene {
 
         // Controls — detect mobile vs desktop
         const isMobile = !this.sys.game.device.os.desktop;
-        const ctrlY = 330;
+        const ctrlY = 270;
         this.add.text(cx, ctrlY, '--- CONTROLS ---', {
             fontSize: '14px',
             fontFamily: 'monospace',
@@ -120,7 +120,7 @@ export class MenuScene extends Phaser.Scene {
         });
 
         // High scores — fetch from server then display
-        this._loadAndShowHighScores(cx, startBtnY + 40);
+        this._loadAndShowHighScores(cx, startBtnY + 30);
     }
 
     async _loadAndShowHighScores(cx, startY) {
