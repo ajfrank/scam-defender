@@ -55,7 +55,7 @@ export class MenuScene extends Phaser.Scene {
 
         // Controls — detect mobile vs desktop
         const isMobile = !this.sys.game.device.os.desktop;
-        const ctrlY = 270;
+        const ctrlY = 295;
         this.add.text(cx, ctrlY, '--- CONTROLS ---', {
             fontSize: '14px',
             fontFamily: 'monospace',
